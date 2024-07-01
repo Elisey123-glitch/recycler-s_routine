@@ -5,6 +5,7 @@ public class CommandHandler : MonoBehaviour
 {
     public Text commandText;
     public Text feedbackText;
+    public TeacherBotController teacherBotController; // Публичное поле для робота-учителя
 
     private string currentCommand = "";
     private bool commandEntered = false;
@@ -20,6 +21,7 @@ public class CommandHandler : MonoBehaviour
         inventoryManager = GetComponent<InventoryManager>();
         shopManager = GetComponent<ShopManager>();
         movementController = GetComponent<MovementController>();
+        teacherBotController = FindObjectOfType<TeacherBotController>(); // Поиск объекта робота-учителя
 
         UpdateCommandLineText();
     }
@@ -85,6 +87,21 @@ public class CommandHandler : MonoBehaviour
         else if (command == "close shop")
         {
             shopManager.HandleCloseShopCommand();
+        }
+        else if (command == "hello")
+        {
+            teacherBotController.ShowNextMessageIcon(); // Отображение следующей иконки сообщения
+            ShowFeedback("Hello, student!");
+        }
+        else if (command == "ok")
+        {
+            teacherBotController.ShowNextMessageIcon(); // Переключение на следующую иконку сообщения
+            ShowFeedback("OK, what's next?");
+        }
+        else if (command == "let's start")
+        {
+            teacherBotController.HideAllIcons(); // Скрытие всех иконок сообщения
+            ShowFeedback("Let's start the lesson!");
         }
         else
         {
