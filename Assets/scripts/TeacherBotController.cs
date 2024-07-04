@@ -12,10 +12,10 @@ public class TeacherBotController : MonoBehaviour
 
     void Start()
     {
-        // Запуск анимации при старте сцены
+        // Устанавливаем анимацию idle при старте сцены
         if (animator != null)
         {
-            animator.SetTrigger("StartAnimation");
+            animator.SetTrigger("Idle");
         }
 
         // Показать первую иконку
@@ -34,14 +34,30 @@ public class TeacherBotController : MonoBehaviour
         {
             ShowNextMessageIcon();
         }
+
+        // Поддержка анимации idle
+        if (animator != null && !animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        {
+            animator.SetTrigger("Idle");
+        }
     }
 
     void LookAtPlayer()
     {
+        // Вычисляем направление к игроку
         Vector3 direction = player.position - transform.position;
+
+        // Поворачиваем только по оси Y, игнорируя компоненты по осям X и Z
         direction.y = 0; // Оставляем только горизонтальное направление
+
+        // Создаем целевое вращение
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
+
+        // Устанавливаем новое вращение, сохраняя текущие углы по осям X и Z
+        Vector3 newRotation = new Vector3(transform.eulerAngles.x, targetRotation.eulerAngles.y, transform.eulerAngles.z);
+
+        // Применяем новое вращение
+        transform.rotation = Quaternion.Euler(newRotation);
     }
 
     public void ShowNextMessageIcon()

@@ -11,12 +11,11 @@ public class TextReveal : MonoBehaviour
     void Start()
     {
         commandWindow.SetActive(false); // Скрываем окно командной строки в начале
-        StartCoroutine(RevealText());
+        StartCoroutine(RevealText(uiText.text));
     }
 
-    IEnumerator RevealText()
+    IEnumerator RevealText(string fullText)
     {
-        string fullText = uiText.text;
         uiText.text = "";
         foreach (char c in fullText)
         {
@@ -29,5 +28,11 @@ public class TextReveal : MonoBehaviour
     void ShowCommandWindow()
     {
         commandWindow.SetActive(true);
+    }
+
+    // Метод для анимированного отображения текста, который можно вызвать извне
+    public void RevealNewText(string newText)
+    {
+        StartCoroutine(RevealText(newText));
     }
 }
